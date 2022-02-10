@@ -11,6 +11,7 @@ library(activityinfo)
 library(tidyverse)
 library(readxl)
 library(writexl)
+  
 # Credentials located in seperate file
 source("R/ai_credentials.R")
 
@@ -85,24 +86,50 @@ source("R/ai_credentials.R")
                       "Other_under",
                       "Other_above")
   
-# Short data wrangling for categorical and integer values
+# Short data wrangling for integer values
   
+  df5W <- df5W %>%
+    mutate_at(c("Value",
+                "Quantity_output",
+                "Total_monthly",
+                "New_beneficiaries",
+                "IN_DESTINATION",
+                "IN_TRANSIT",
+                "Host_Communities",
+                "PENDULARS",
+                "Returnees",
+                "Girls",
+                "Boys",
+                "Women",
+                "Men",
+                "Other_under",
+                "Other_above"), as.numeric)
 
 # Not recommended but if needed, chose to write the 5W as a xlsx file in repository
 
   if(write == "yes"){
     write_xlsx(df5W, "./data/Activities_5W_2022.xlsx")
-    } else {}
-  
+    } 
 # Get other reference table used during the data quality check
 # Loaded from AI regardless the method for 5W used
   dfadmin2 <- queryTable("cn6oysukx6hk2cn3",
                    "Country" = "cnkb6jykxgdeemm4r.c8u26b8kxeqpy0k4",
-                   "Country Admin1" = "cnkb6jykxgdeemm4r.c3ns3zikxeqq4h95",
+                   "Admin1" = "cnkb6jykxgdeemm4r.c3ns3zikxeqq4h95",
                    "Admin2" = "cs2esadkx6hkt7j6")
 
   dfindicator <- queryTable("c49gyhmktedz4uj2",
                    "Code" = "cob8rivktedzp0f3",
                    "Subsector" = "cgdeh97ktn4sdek3s.cfvkmslkpy3tg94n",
+                   "Indicator" = "cwkj9p4kteeh4ls5",
                    "Indicator type" = "cprepl2ktk2l76a3")
+  
+  dfAO <- queryTable("cbisyyxkumvyhy57",
+                   "AOIDORG" = "cnhvpo4kumvyqla8",
+                   "Name" = "ckj5zamkumvyysv9")
+
+  dfIP <- queryTable("cuy0fjukumwabck4",
+                   "IPID" = "cd2ow0jkumwazdl1h",
+                   "Name" = "ckj5zamkumvyysv9")
+  
+  
 } 

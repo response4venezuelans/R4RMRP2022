@@ -7,10 +7,14 @@
 
 # 1_read_data
 # Mandatory step to obtain 5W data that will then be process in the following steps of the process
-# Options:source: "file": reads data from XLS file  "activityinfo": Activity Indo API download
+# Options:source: "file": reads data from XLS file  "activityinfo": Activity Info API download
 # Default: "activityinfo" 
 # write: "yes": saves files, "no": do not save
 # default: "no"
+
 source("R/1_read_data.R")
 read_data_2022(source = "activityinfo",
                write = "no")
+
+
+## put dictionary in AI 
