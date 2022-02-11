@@ -115,13 +115,21 @@ source("R/ai_credentials.R")
   dfadmin2 <- queryTable("cn6oysukx6hk2cn3",
                    "Country" = "cnkb6jykxgdeemm4r.c8u26b8kxeqpy0k4",
                    "Admin1" = "cnkb6jykxgdeemm4r.c3ns3zikxeqq4h95",
-                   "Admin2" = "cs2esadkx6hkt7j6")
+                   "Admin2" = "cs2esadkx6hkt7j6")%>%
+    rowwise()%>%
+    mutate(countryadmin1 = paste(Country, Admin1),
+           admin1and2 = paste(Admin1, Admin2))%>%
+    ungroup()
 
   dfindicator <- queryTable("c49gyhmktedz4uj2",
                    "Code" = "cob8rivktedzp0f3",
                    "Subsector" = "cgdeh97ktn4sdek3s.cfvkmslkpy3tg94n",
                    "Indicator" = "cwkj9p4kteeh4ls5",
-                   "Indicator type" = "cprepl2ktk2l76a3")
+                   "Indicatortype" = "cprepl2ktk2l76a3")%>%
+    rowwise()%>%
+    mutate(sectindic = paste(Subsector, Indicator))%>%
+    ungroup
+    
   
   dfAO <- queryTable("cbisyyxkumvyhy57",
                    "AOIDORG" = "cnhvpo4kumvyqla8",
