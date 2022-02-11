@@ -62,9 +62,29 @@ if (is.null(countryname) || (countryname=="All")) {
     CVANotoYes = ifelse((!is.na(Delivery_mechanism) | (!is.na(Value) & Value > 0)) & CVA == "No", "ERROR", ""),
     MultipurposeSector = ifelse(Subsector == "Multipurpose Cash Assistance (MPC)" & CVA == "No", "ERROR", ""),
     # Output and Breakdown related mistakes. Errors will be divided according to indicator types
-    # PiN indicator related mistakes
-    
+    # PNiN indicator related mistakes
+    PiNNoBenef = ifelse(Indicatortype == 'PiN' & (is.na(New_beneficiaries) | New_beneficiaries = 0 | is.na(Total_monthly) | Total_monthly = 0), "ERROR", ""),
+    NewBenefvstotal = ifelse(Indicatortype == 'PiN' & New_beneficiaries > Total_monthly, "ERROR", ""),
+    PopTypeBreakdown = ifelse(Indicatortype == 'PiN' & New_beneficiaries != sum(IN_DESTINATION,
+                                                                                 IN_TRANSIT,
+                                                                                 Host_Communities,
+                                                                                 PENDULARS,
+                                                                                 Returnees, na.rm = TRUE), "ERROR", ""),
+    AGDBreakdown = ifelse(Indicatortype == 'PiN' & New_beneficiaries != sum(Girls,
+                                                                              Boys,
+                                                                              Women,
+                                                                              Men,
+                                                                            Oher_under,
+                                                                              Other_above, na.rm = TRUE), "ERROR", ""),
+    # Capacity Building indicators
+    CBuildingNoBenef = ifelse(Indicatortype == 'Capacity Building' & (Total_monthly = 0 | is.na(Total_monthly)), "ERROR", ""),
+    # Todos los otros indicadores
+    NoOutput = ifelse ((Indicatortype != 'Capacity Building' & Indicatortype == 'PiN') & (Quantity_output = 0 | is.na(Quantity_output)), "ERROR", "")
     )
-
+  # Count errors and classify
+  
+  # Remove empty errors column for easier reading
+  
+  # print error file if needed
 } 
 ## remove objects end of script##
