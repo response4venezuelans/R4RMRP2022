@@ -46,14 +46,14 @@ if (is.null(countryname) || (countryname=="All")) {
   df5Werror <- df5Werror %>%
     rowwise()%>%
     # Where: check missing mandatory fields, Country-Admin1 pairs and Admin1-Admin2 pairs
-    mutate(missing = ifelse(is.na(Country) | is.na(Admin1), "Review", ""),
+    mutate(missingcountry = ifelse(is.na(Country) | is.na(Admin1), "Review", ""),
            countryadmincheck = ifelse(!any(countryadmin1 == countrylist), "Review", ""),
            admin1and2check = ifelse(!is.na(Admin2) & !any(Admin1and2 == admin2list), "Review", ""),
     # Who: Missing values and Org names that are not part of the list
       miss_appeal_org = ifelse(!is.na(Appealing_org) & any(Appealing_org == AOlist), "", "Review"),
       miss_setup = ifelse(is.na(Implementation), "Review", ""),
-      miss_implementing_org = ifelse((Implementation == "Yes" & is.na(Implementing_partner) | !any(Implementing_partner == IPlist)) | 
-                                       (Implementation == "No" & !is.na(Implementing_partner)), "", "Review"),
+      miss_implementing_org = ifelse((Implementation == "Yes" & (is.na(Implementing_partner) | !any(Implementing_partner == IPlist))) | 
+                                       (Implementation == "No" & !is.na(Implementing_partner)), "Review", ""),
     # When: Missing month
     miss_month = ifelse(is.na(Month), "Review", ""),
     # What: missing values and inconsistencies in CVA
@@ -82,7 +82,7 @@ if (is.null(countryname) || (countryname=="All")) {
     # Capacity Building indicators
     CBuildingNoBenef = ifelse(Indicatortype == 'Capacity Building' & (Total_monthly == 0 | is.na(Total_monthly)), "Review", ""),
     # Todos los otros indicadores
-    NoOutput = ifelse ((Indicatortype != 'Capacity Building' & Indicatortype == 'PiN') & (Quantity_output == 0 | is.na(Quantity_output)), "Review", "")
+    NoOutput = ifelse ((Indicatortype != 'Capacity Building' & Indicatortype != 'PiN') & (Quantity_output == 0 | is.na(Quantity_output)), "Review", "")
     )
   # Count errors and classify
   

@@ -48,7 +48,7 @@ source("R/ai_credentials.R")
                      "Women above 18" = "c3l36n2kx6l70kp4u",
                      "Men above 18" = "ctd27ackx6l7g814v",
                      "Other under 18" = "ckjcuiokx6l9a504w",
-                     "Other above 18" = "cq4hs3skx6lggpj4x")
+                     "Other above 18" = "cq4hs3skx6lggpj4x", truncate.strings = FALSE)
   } else {
     df5W <- read_excel("data/RMRP2022Activities.xlsx")%>%
       # As template has extra row at the beginning, removes those extra rows
@@ -117,7 +117,7 @@ source("R/ai_credentials.R")
   dfadmin2 <- queryTable("cn6oysukx6hk2cn3",
                    "Country" = "cnkb6jykxgdeemm4r.c8u26b8kxeqpy0k4",
                    "Admin1" = "cnkb6jykxgdeemm4r.c3ns3zikxeqq4h95",
-                   "Admin2" = "cs2esadkx6hkt7j6")%>%
+                   "Admin2" = "cs2esadkx6hkt7j6", truncate.strings = FALSE)%>%
     rowwise()%>%
     mutate(countryadmin1 = paste(Country, Admin1),
            admin1and2 = paste(Admin1, Admin2))%>%
@@ -127,7 +127,7 @@ source("R/ai_credentials.R")
                    "Code" = "cob8rivktedzp0f3",
                    "Subsector" = "cgdeh97ktn4sdek3s.cfvkmslkpy3tg94n",
                    "Indicator" = "cwkj9p4kteeh4ls5",
-                   "Indicatortype" = "cprepl2ktk2l76a3")%>%
+                   "Indicatortype" = "cprepl2ktk2l76a3", truncate.strings = FALSE)%>%
     rowwise()%>%
     mutate(sectindic = paste(Subsector, Indicator))%>%
     ungroup
@@ -135,11 +135,11 @@ source("R/ai_credentials.R")
   
   dfAO <- queryTable("cbisyyxkumvyhy57",
                    "AOIDORG" = "cnhvpo4kumvyqla8",
-                   "Name" = "ckj5zamkumvyysv9")
+                   "Name" = "ckj5zamkumvyysv9", truncate.strings = FALSE)
 
   dfIP <- queryTable("cuy0fjukumwabck4",
                    "IPID" = "cd2ow0jkumwazdl1h",
-                   "Name" = "ckj5zamkumvyysv9")
+                   "Name" = "ckj5zamkumvyysv9", truncate.strings = FALSE)
   
   
 } 
