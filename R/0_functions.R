@@ -7,7 +7,7 @@
 
 # 1_read_data
 # Mandatory step to obtain 5W data that will then be process in the following steps of the process
-# Options:source: "file": reads data from XLS file  "activityinfo": Activity Info API download
+# Options:source: "file": reads data from XLS file "activityinfo": Activity Info API download
 # Default: "activityinfo" 
 # write: "yes": saves files, "no": do not save
 # default: "no"
@@ -17,9 +17,21 @@ read_data_2022(source = "activityinfo",
                write = "no")
 
 
-# 
+# Data Quality Check
+# Option: filter your country
+# write the report in a local repository
 source("R/2_data_quality_check.R")
-read_data_2022(countryname = NULL,
+r4v_error_report(countryname = NULL,
                write = "yes")
+
+
+# Consolidated report
+# Filter by country and by consolidated methodology
+# Consolidating methodologies:
+# 
+
+source("R/3_consolidated_report.R")
+r4v_consolidated(data,countryname = NULL, 
+                 totalmodel = "sum")
 
 ## put dictionary in AI 

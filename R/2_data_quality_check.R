@@ -2,7 +2,7 @@
 
 ### Function start
 
-r4v_error_report <- function(data,countryname = NULL, print = NULL)
+r4v_error_report <- function(data,countryname = NULL, write = NULL)
 { 
 
 ### Get packages
@@ -90,14 +90,16 @@ if (is.null(countryname) || (countryname=="All")) {
   df5Werror$Review[apply(df5Werror, 1, function(r) any(r %in% c("Review"))) == TRUE] <- "Please review activity"
   
   # Remove empty errors column for easier reading
-  
-  df5Werror <- df5Werror %>%
-    discard(across(34:54,(is.na(.) | . =="")))
+  # 
+  # df5Werror <- df5Werror %>%
+  #   discard(across(34:54,(is.na(.) | . =="")))
   
   # print error file
   if(write == "yes"){
   writexl::write_xlsx(df5Werror, './out/5WErrorReport.xlsx')
-  } 
+  } else {
+    
+  }
   
   ## remove objects end of script##
   rm(AOlist, IPlist, countrylist, admin2list, df5Werror, sectindiclist)
