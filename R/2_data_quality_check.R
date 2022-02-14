@@ -2,7 +2,7 @@
 
 ### Function start
 
-r4v_error_report <- function(data,countryname = NULL)
+r4v_error_report <- function(data,countryname = NULL, print = NULL)
 { 
 
 ### Get packages
@@ -83,10 +83,11 @@ if (is.null(countryname) || (countryname=="All")) {
     CBuildingNoBenef = ifelse(Indicatortype == 'Capacity Building' & (Total_monthly == 0 | is.na(Total_monthly)), "Review", ""),
     # Todos los otros indicadores
     NoOutput = ifelse ((Indicatortype != 'Capacity Building' & Indicatortype != 'PiN') & (Quantity_output == 0 | is.na(Quantity_output)), "Review", "")
-    )
+    )%>%
+    select(-countryadmin1, -Admin1and2, -sectorindicator, -Indicatortype)
   # Count errors and classify
   
-  df5Werror$ERROR[apply(df5Werror, 1, function(r) any(r %in% c("Review"))) == TRUE] <- "Please review activity"
+  df5Werror$Review[apply(df5Werror, 1, function(r) any(r %in% c("Review"))) == TRUE] <- "Please review activity"
   
   # Remove empty errors column for easier reading
   
@@ -94,10 +95,12 @@ if (is.null(countryname) || (countryname=="All")) {
     discard(across(34:54,(is.na(.) | . =="")))
   
   # print error file
-  
+  if(write == "yes"){
   writexl::write_xlsx(df5Werror, './out/5WErrorReport.xlsx')
+  } 
   
   ## remove objects end of script##
+  rm(AOlist, IPlist, countrylist, admin2list, df5Werror, sectindiclist)
   
 } 
 

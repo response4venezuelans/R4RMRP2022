@@ -17,4 +17,9 @@ read_data_2022(source = "activityinfo",
                write = "no")
 
 
+# 
+source("R/2_data_quality_check.R")
+read_data_2022(countryname = NULL,
+               write = "yes")
+
 ## put dictionary in AI 
