@@ -50,7 +50,9 @@ source("R/ai_credentials.R")
                      "Other under 18" = "ckjcuiokx6l9a504w",
                      "Other above 18" = "cq4hs3skx6lggpj4x")
   } else {
-    df5W <- read_excel("data/RMRP2022Activities.xlsx")
+    df5W <- read_excel("data/RMRP2022Activities.xlsx")%>%
+      # As template has extra row at the beginning, removes those extra rows
+      slice(-c(1,2))
   }
   
  # format column names for easier data processing
