@@ -135,11 +135,13 @@ source("R/ai_credentials.R")
   
   dfAO <- queryTable("cbisyyxkumvyhy57",
                    "AOIDORG" = "cnhvpo4kumvyqla8",
-                   "Name" = "ckj5zamkumvyysv9", truncate.strings = FALSE)
+                   "Name" = "ckj5zamkumvyysv9",
+                   "Nombre" = "cpmcp88kumvz7bsa", truncate.strings = FALSE)
 
   dfIP <- queryTable("cuy0fjukumwabck4",
                    "IPID" = "cd2ow0jkumwazdl1h",
-                   "Name" = "ckj5zamkumvyysv9", truncate.strings = FALSE)
+                   "Name" = "ckj5zamkumvyysv9",
+                   "Nombre" = "cpmcp88kumvz7bsa", truncate.strings = FALSE)
   
   
 } 

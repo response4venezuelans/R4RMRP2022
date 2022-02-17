@@ -32,6 +32,8 @@ r4v_error_report(countryname = NULL,
 
 source("R/3_consolidated_report.R")
 r4v_consolidated(data,countryname = NULL, 
+                 proportions = "pin", 
                  totalmodel = "sum")
 
-## put dictionary in AI 
+source("R/4_Translation.R")
+rmrp_translate()
