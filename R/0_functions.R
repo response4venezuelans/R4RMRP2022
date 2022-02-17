@@ -28,7 +28,7 @@ r4v_error_report(countryname = NULL,
 # Consolidated report
 # Filter by country and by consolidated methodology
 # Consolidating methodologies:
-# 
+# Sum: sum  all beneficiaries at admin1 level per sector and intersector
 
 source("R/3_consolidated_report.R")
 r4v_consolidated(data,countryname = NULL, 

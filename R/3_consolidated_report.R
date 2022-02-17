@@ -2,7 +2,9 @@
 
 # function writing
 
-r4v_consolidated <- function(data,countryname = NULL, totalmodel = "sum")
+r4v_consolidated <- function(data,countryname = NULL, 
+                             proportions = "pin", 
+                             totalmodel = "sum")
 
 # Packages
 
@@ -17,12 +19,14 @@ if (is.null(countryname) || (countryname=="All")) {
   df5Wconsolidated <- df5W %>%
     left_join(dfindicator, by = c("Subsector", "Indicator"))%>%
     select(-Code, -sectindic)%>%
-    filter(Indicatortype == "PiN" & RMRPActivity == "Yes")
+    filter(Indicatortype == "PiN" & RMRPActivity == "Yes")%>%
+    mutate_if(is.numeric, replace_na, replace = 0)
 } else {
   df5Wconsolidated <- df5W %>% filter(Country == countryname)%>%
     left_join(dfindicator, by = c("Subsector", "Indicator"))%>%
     select(-Code, -sectindic)%>%
-    filter(Indicartortype == "PiN" & RMRPActivity == "Yes")  
+    filter(Indicartortype == "PiN" & RMRPActivity == "Yes")%>%
+  mutate_if(is.numeric, replace_na, replace = 0)  
 }
 
 # Get consolidated template file
@@ -35,6 +39,15 @@ if (is.null(countryname) || (countryname=="All")) {
   dftemplate <- dftemplate%>%
     filter(Country == countryname) 
 }
+
+# Get prpoportions file for each sector in Admin1 and poptype categories
+
+if (proportions == "pin")  {
+  dfproportions <- read_excel("./data/Proportions.xlsx", sheet = "pinproportions")
+} else if (proportions == "target") {
+  dfproportions <- read_excel("data/Proportions.xlsx", sheet = "targetproportions")
+}
+
 
 #################### 1. Total Monthly figures #################################################################
 
