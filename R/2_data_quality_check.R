@@ -35,10 +35,10 @@ if (is.null(countryname) || (countryname=="All")) {
 # Data wrangling of reference table for quality check
 # Vectors for verification
   
-  AOlist <- as.vector(dfAO["Name"])
-  IPlist <- as.vector(dfIP["Name"])
-  countrylist <- as.vector(dfadmin2["countryadmin1"])
-  admin2list <- as.vector(dfadmin2["admin1and2"])
+  AOlist <- unique(as.vector(dfAO["Name"]))
+  IPlist <- unique(as.vector(dfIP["Name"]))
+  countrylist <- unique(as.vector(dfadmin2["countryadmin1"]))
+  admin2list <- unique(as.vector(dfadmin2["admin1and2"]))
   sectindiclist <-  as.vector(dfindicator["sectindic"])
   
 # Data Quality Check

@@ -2,10 +2,11 @@
 
 # function writing
 
-r4v_consolidated <- function(data,countryname = NULL, 
+r4v_consolidated <- function(data,
+                             countryname = NULL, 
                              proportions = "pin", 
                              totalmodel = "sum")
-
+{
 # Packages
 
 library(tidyverse)
@@ -26,19 +27,24 @@ if (is.null(countryname) || (countryname=="All")) {
     filter(Country == countryname)%>%
     left_join(dfindicator, by = c("Subsector", "Indicator"))%>%
     select(-Code, -sectindic)%>%
-    filter(Indicartortype == "PiN" & RMRPActivity == "Yes")%>%
+    filter(Indicatortype == "PiN" & RMRPActivity == "Yes")%>%
   mutate_if(is.numeric, replace_na, replace = 0)  
 }
-
+ 
+# Create a vector based on Activity's months to the filter the template
+  monthlist <- unique(as.vector(df5Wconsolidated["Month"]))
+  
 # Get consolidated template file
 
 dftemplate <- read_excel("data/Consolidated_Template.xlsx")
+
 
 if (is.null(countryname) || (countryname=="All")) {
   dftemplate <- dftemplate
 } else {
   dftemplate <- dftemplate%>%
-    filter(Country == countryname) 
+    filter(Country == "Costa Rica")%>%
+    semi_join(monthlist, by = "Month")
 }
 
 # Get prpoportions file for each sector in Admin1 and poptype categories
@@ -138,6 +144,7 @@ consallsectors <- conssectors%>%
 # Model 1: Sum All: sums all beneficiaries of all sectors to get intersector figures
 # per admin1 level and then at national level
 if (totalmodel == "sum")
+{
   conssumadm1 <- consallsectors%>%
   group_by(Country, Admin1, Month)%>%
   summarise(Subsector = "Intersector",
@@ -179,8 +186,10 @@ consfinalcountrylevel <- consfinaladmin1 %>%
 
 consfinal <- rbind(consfinaladmin1, consfinalcountrylevel)%>%
   arrange(Country, Admin1)
+}
 
 if (totalmodel == "maxsector")
+  { 
   # Model 2: Max Sector: sums all beneficiaries at sector and admin1 level, then take
   # the max of each age and gender categories for each population type to get the intersector figure
   
@@ -282,8 +291,10 @@ if (totalmodel == "maxsector")
               Consolidated_CVA_Beneficiaries = sum(Consolidated_CVA_Beneficiaries))
 
    consfinal <- rbind(consmaxfinaladmin1, consmaxfinalcountry)  
+}
    
    if (totalmodel == "sountherconemodel")
+     {
      # Model 3: Mixed approach in 3 steps:
      # Max across Shelter, Food security, Humanitarian transport and WASH
      # Take Protection (General) data
@@ -406,7 +417,7 @@ if (totalmodel == "maxsector")
                Consolidated_Other_above_18 = sum(Consolidated_Other_above_18),
                Consolidated_CVA_Beneficiaries = sum(Consolidated_CVA_Beneficiaries))
    # Merge the 3 separate steps in a single file and sum the beneficiaries for intersector at Admin1
-   consCSadmin1 <- rbind(conCSstep1, consCSstep2, consCSstep3)%>%
+   consCSadmin1 <- rbind(consCSstep1, consCSstep2, consCSstep3)%>%
      group_by(Country, Admin1, Month)%>%
      summarise(Subsector = "Intersector",
                Monthly_Consolidated = sum(Monthly_Consolidated),
@@ -442,12 +453,27 @@ if (totalmodel == "maxsector")
                Consolidated_CVA_Beneficiaries = sum(Consolidated_CVA_Beneficiaries))
    # Merge admin1 and country level figures final file
    consfinal <- rbind(consCSadmin1, consCScountry)
-   
-   
+}
+
+##### Back to common consolidation process #############
+
   # Merge the tables before merging to template and final cleaning
    
    consfullmodel <- consfinal %>%
      full_join(finalmonthlytotal, by = c("Country", "Admin1", "Month", "Subsector"))
+
+# For countries with no admin1, filter out to only keep the "Country level" data
+
+countrynoadmin1 <- as.vector(c("Aruba", "Costa Rica", "Curaçao", "Dominican Republic", "Guyana", "Mexico", "Panama", "Trinidad and Tobago"))
+
+if(countryname %in% countrynoadmin1){
+  
+  
+  consfullmodel <- consfullmodel%>%
+    filter(Admin1 == "Country level")
+  
+  
+}
 
   # Merge with template
    consolidated_report <- dftemplate %>%
@@ -458,7 +484,7 @@ if (totalmodel == "maxsector")
    
    FinalConsolidated <- consolidated_report%>%
      group_by(Country, Admin1, Subsector)%>%
-     arrange(Country, Month)%>%
+     arrange(Country, Admin1, Month)%>%
      mutate('Consolidated Total' = cumsum(Monthly_Consolidated),
             'Consolidated In Destination' = cumsum(Consolidated_RMindestination),
             'Consolidated In Transit' = cumsum(Consolidated_RM_in_transit),
@@ -471,7 +497,7 @@ if (totalmodel == "maxsector")
             'Consolidated Men' = cumsum(Consolidated_Men),
             'Consolidated Other under 18' = cumsum(Consolidated_Other_under_18),
             'Consolidated Other above 18' = cumsum(Consolidated_Other_above_18),
-            'Consolidated CVA Beneficiaries' = cumsum(Monthly_CVA_Consolidated))%>%
+            'Consolidated CVA Beneficiaries' = cumsum(Consolidated_CVA_Beneficiaries))%>%
      rowwise()%>%
      # Add 2 columns to check if the breakdowns are correct. 
      mutate('Check PopType Breakdown' = ifelse(`Consolidated Total` == 0 | (`Consolidated Total` > 0 & 
@@ -494,7 +520,6 @@ if (totalmodel == "maxsector")
      select(Platform,
             Country, 
             Month,
-            Sector,
             Subsector,
             `Monthly Total Beneficiaries`,
             `Monthly CVA Beneficiaries`,
@@ -517,7 +542,7 @@ if (totalmodel == "maxsector")
             
    # Print file
    write_xlsx(FinalConsolidated, './out/RMRP_2021_AI_consolidated.xlsx')
-   
+}  
      
      
      
