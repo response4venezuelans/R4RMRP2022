@@ -82,27 +82,96 @@ if (is.null(countryname) || (countryname=="All")) {
     # Capacity Building indicators
     CBuildingNoBenef = ifelse(Indicatortype == 'Capacity Building' & (Total_monthly == 0 | is.na(Total_monthly)), "Review", ""),
     # Todos los otros indicadores
-    NoOutput = ifelse ((Indicatortype != 'Capacity Building' & Indicatortype != 'PiN') & (Quantity_output == 0 | is.na(Quantity_output)), "Review", "")
-    )%>%
+    NoOutput = ifelse ((Indicatortype != 'Capacity Building' & Indicatortype != 'PiN') & (Quantity_output == 0 | is.na(Quantity_output)), "Review", ""),
+    Review = NA)%>%
+    ungroup()%>%
     select(-countryadmin1, -Admin1and2, -sectorindicator, -Indicatortype)
   # Count errors and classify
   
   df5Werror$Review[apply(df5Werror, 1, function(r) any(r %in% c("Review"))) == TRUE] <- "Please review activity"
   
   # Remove empty errors column for easier reading
-  # 
-  # df5Werror <- df5Werror %>%
-  #   discard(across(34:54,(is.na(.) | . =="")))
+  # Create a row number column 
   
+  df5Werror <- df5Werror%>%
+    mutate(id = row_number())
+
+  # split the dataframe in 2
+  df5Werror1 <- df5Werror%>%
+    select(Country,
+           Admin1,
+           Admin2,
+           Appealing_org,
+           Implementation,
+           Implementing_partner,
+           Month,
+           Subsector,
+           Indicator,
+           Activity_Name,
+           Activity_Description,
+           COVID19,
+           RMRPActivity,
+           CVA,
+           Value,
+           Delivery_mechanism,
+           Quantity_output,
+           Total_monthly, 
+           New_beneficiaries,
+           IN_DESTINATION,
+           IN_TRANSIT,
+           Host_Communities,
+           PENDULARS,
+           Returnees,  
+           Girls,
+           Boys,
+           Women,
+           Men,
+           Other_under,
+           Other_above,
+           id)
+
+ df5Werror2 <- df5Werror%>%
+   select(missingcountry,
+          countryadmincheck,
+          admin1and2check,
+          miss_appeal_org,
+          miss_setup,
+          miss_implementing_org,
+          miss_month,
+          missing_what,
+          wrongsectindicator,
+          zeroCVA,
+          missingmechanism,
+          CVANotoYes,           
+           MultipurposeSector,
+           PiNNoBenef,
+           NewBenefvstotal,
+           PopTypeBreakdown,
+           AGDBreakdown,
+           CBuildingNoBenef,     
+           NoOutput,
+           Review,
+           id)
+  
+  # remove empty columns
+ df5Werror2 <-  df5Werror2%>% discard(~all(is.na(.) | . ==""))
+ 
+  # join by matching id column
+ 
+ df5Werror0 <- df5Werror1%>%
+   left_join(df5Werror2, by = "id")%>%
+   select(-id)
+ 
   # print error file
+ 
   if(write == "yes"){
-  writexl::write_xlsx(df5Werror, './out/5WErrorReport.xlsx')
+  writexl::write_xlsx(df5Werror0, './out/5WErrorReport.xlsx')
   } else {
     
   }
   
   ## remove objects end of script##
-  rm(AOlist, IPlist, countrylist, admin2list, df5Werror, sectindiclist)
+  rm(AOlist, IPlist, countrylist, admin2list, df5Werror, sectindiclist,df5Werror0 ,df5Werror1 ,df5Werror2)
   
 } 
 
