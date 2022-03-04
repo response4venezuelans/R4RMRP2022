@@ -91,7 +91,7 @@ rmrp_translate <- function()
   
   # Insert local file to get data in Spanish
   
-  df5WSpanish
+  df5WSpanish <- read_excel("./data/RMRP2022ActivitiesSP.xlsx")
   
   # Change column names to english templamte version
   
@@ -145,13 +145,15 @@ rmrp_translate <- function()
                 "Other_under",
                 "Other_above"), as.numeric)
   
+ 
+  
   # Translation function
   translate_to_english <- function(df, col_esp, dict, group){
     dict_group <- dict %>% 
-      filter(variable == group)
+      filter(type == group)
     
-    eng_term <- dict_group[amatch(df %>% select(as.name(col_esp)) %>% pull(),
-                                  dict_group$Spanish,
+    eng_term <-  dict_group[amatch(df %>% select(as.name(col_esp)) %>% pull(),
+                                   dict_group$Spanish,
                                   maxDist=2),
                            2] %>%
       pull()
@@ -159,16 +161,18 @@ rmrp_translate <- function()
     return(eng_term)
   }
   
-  df5Wtranslated <- df5WSpanish  %>% 
-    mutate(Appealing_org = translate_to_spanish(df5WSpanish, Appealing_org, dictionnary, 'AO'),
-      Implementing_partner = translate_to_spanish(df5WSpanish, Implementing_partner, dictionnary, 'IP'),
-      Implementation = translate_to_spanish(df5WSpanish,Implementation, dictionnary, "yesno"),
-      Subsector = translate_to_spanish(df5WSpanish, Subsector, dictionnary, "Sector"),
-      Indicator = translate_to_spanish(df5WSpanish, Indicator, dictionnary, "Indicator"),
-      COVID19 = translate_to_spanish(df5WSpanish, COVID19, dictionnary, "yesno"),
-      RMRPActivity = translate_to_spanish(df5WSpanish,RMRPActivity, dictionnary, "yesno"),
-      CVA = translate_to_spanish(df5WSpanish, CVA, dictionnary, "yesno"),
-      Delivery_mechanism = translate_to_spanish(df5WSpanish, Delivery_mechanism, dictionnary, "mechanism")
+  df5Wtranslated <- df5WSpanish  %>%
+    mutate(`Appealing_org` = translate_to_english(df5WSpanish,"Appealing_org", dictionnary, 'AO'))
+           
+           
+      Implementing_partner = translate_to_english(df5WSpanish, "Implementing_partner", dictionnary, 'IP'),
+      Implementation = translate_to_english(df5WSpanish,"Implementation", dictionnary, "yesno"),
+      Subsector = translate_to_english(df5WSpanish, "Subsector", dictionnary, "Sector"),
+      Indicator = translate_to_english(df5WSpanish," Indicator", dictionnary, "Indicator"),
+      COVID19 = translate_to_english(df5WSpanish, "COVID19", dictionnary, "yesno"),
+      RMRPActivity = translate_to_english(df5WSpanish,"RMRPActivity", dictionnary, "yesno"),
+      CVA = translate_to_english(df5WSpanish, "CVA", dictionnary, "yesno"),
+      Delivery_mechanism = translate_to_english(df5WSpanish, "Delivery_mechanism", dictionnary, "mechanism")
     ) 
   
   write_xlsx(df5Wtranslated, './out/Translated5W.xlsx')

@@ -114,13 +114,21 @@ source("R/ai_credentials.R")
     } 
 # Get other reference table used during the data quality check
 # Loaded from AI regardless the method for 5W used
+  
+  dfadmin1 <- queryTable("ct51c85kxeqpu473",
+                   "Country" = "c8u26b8kxeqpy0k4",
+                   "Admin1" = "c3ns3zikxeqq4h95",
+                   "ISOCode" = "cl3sspjkxeqq8yq6",truncate.strings = FALSE)%>%
+    rowwise()%>%
+    mutate(countryadmin1 = paste(Country, Admin1))%>%
+    ungroup()
+  
   dfadmin2 <- queryTable("cn6oysukx6hk2cn3",
                    "Country" = "cnkb6jykxgdeemm4r.c8u26b8kxeqpy0k4",
                    "Admin1" = "cnkb6jykxgdeemm4r.c3ns3zikxeqq4h95",
                    "Admin2" = "cs2esadkx6hkt7j6", truncate.strings = FALSE)%>%
     rowwise()%>%
-    mutate(countryadmin1 = paste(Country, Admin1),
-           admin1and2 = paste(Admin1, Admin2))%>%
+    mutate(admin1and2 = paste(Admin1, Admin2))%>%
     ungroup()
 
   dfindicator <- queryTable("c49gyhmktedz4uj2",

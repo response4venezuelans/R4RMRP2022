@@ -37,7 +37,7 @@ if (is.null(countryname) || (countryname=="All")) {
   
   AOlist <- unique(as.vector(dfAO["Name"]))
   IPlist <- unique(as.vector(dfIP["Name"]))
-  countrylist <- unique(as.vector(dfadmin2["countryadmin1"]))
+  countrylist <- unique(as.vector(dfadmin1["countryadmin1"]))
   admin2list <- unique(as.vector(dfadmin2["admin1and2"]))
   sectindiclist <-  as.vector(dfindicator["sectindic"])
   
