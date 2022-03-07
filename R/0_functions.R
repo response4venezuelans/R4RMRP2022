@@ -3,8 +3,6 @@
 
 ## Author: R4V IM Team, Francis Fayolle and James Léon-Dufour
 
-## 
-
 # 1_read_data
 # Mandatory step to obtain 5W data that will then be process in the following steps of the process
 # Options:source: "file": reads data from XLS file "activityinfo": Activity Info API download
@@ -31,7 +29,7 @@ r4v_error_report(countryname = NULL,
 # Sum: sum  all beneficiaries at admin1 level per sector and intersector
 
 source("R/3_consolidated_report.R")
-r4v_consolidated(data,countryname = NULL , 
+r4v_consolidated(data,countryname = "Costa Rica", 
                  proportions = "pin", 
                  totalmodel = "maxsector")
 

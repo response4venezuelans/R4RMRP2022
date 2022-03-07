@@ -90,7 +90,7 @@ source("R/ai_credentials.R")
   
 # Short data wrangling for integer values
   
-  df5W <- df5W %>%
+  df5W <<- df5W %>%
     mutate_at(c("Value",
                 "Quantity_output",
                 "Total_monthly",
@@ -105,7 +105,8 @@ source("R/ai_credentials.R")
                 "Women",
                 "Men",
                 "Other_under",
-                "Other_above"), as.numeric)
+                "Other_above"), as.numeric)%>%
+    arrange(Country, Month)
 
 # Not recommended but if needed, chose to write the 5W as a xlsx file in repository
 
@@ -115,7 +116,7 @@ source("R/ai_credentials.R")
 # Get other reference table used during the data quality check
 # Loaded from AI regardless the method for 5W used
   
-  dfadmin1 <- queryTable("ct51c85kxeqpu473",
+  dfadmin1  <<- queryTable("ct51c85kxeqpu473",
                    "Country" = "c8u26b8kxeqpy0k4",
                    "Admin1" = "c3ns3zikxeqq4h95",
                    "ISOCode" = "cl3sspjkxeqq8yq6",truncate.strings = FALSE)%>%
@@ -123,7 +124,7 @@ source("R/ai_credentials.R")
     mutate(countryadmin1 = paste(Country, Admin1))%>%
     ungroup()
   
-  dfadmin2 <- queryTable("cn6oysukx6hk2cn3",
+  dfadmin2  <<- queryTable("cn6oysukx6hk2cn3",
                    "Country" = "cnkb6jykxgdeemm4r.c8u26b8kxeqpy0k4",
                    "Admin1" = "cnkb6jykxgdeemm4r.c3ns3zikxeqq4h95",
                    "Admin2" = "cs2esadkx6hkt7j6", truncate.strings = FALSE)%>%
@@ -131,7 +132,7 @@ source("R/ai_credentials.R")
     mutate(admin1and2 = paste(Admin1, Admin2))%>%
     ungroup()
 
-  dfindicator <- queryTable("c49gyhmktedz4uj2",
+  dfindicator  <<- queryTable("c49gyhmktedz4uj2",
                    "Code" = "cob8rivktedzp0f3",
                    "Subsector" = "cgdeh97ktn4sdek3s.cfvkmslkpy3tg94n",
                    "Indicator" = "cwkj9p4kteeh4ls5",
@@ -139,17 +140,20 @@ source("R/ai_credentials.R")
     rowwise()%>%
     mutate(sectindic = paste(Subsector, Indicator))%>%
     ungroup
-    
   
-  dfAO <- queryTable("cbisyyxkumvyhy57",
+  dfindSP <<- queryTable("cqt45yktk2m8ky3",
+                        "Codigo" = "cob8rivktedzp0f3",
+                        "SectorSP" = "c84rjfckxgbve582",
+                        "Indicador" = "cwkj9p4kteeh4ls5", truncate.strings = FALSE)  
+  
+  dfAO  <<- queryTable("cbisyyxkumvyhy57",
                    "AOIDORG" = "cnhvpo4kumvyqla8",
                    "Name" = "ckj5zamkumvyysv9",
                    "Nombre" = "cpmcp88kumvz7bsa", truncate.strings = FALSE)
 
-  dfIP <- queryTable("cuy0fjukumwabck4",
+  dfIP  <<- queryTable("cuy0fjukumwabck4",
                    "IPID" = "cd2ow0jkumwazdl1h",
                    "Name" = "ckj5zamkumvyysv9",
                    "Nombre" = "cpmcp88kumvz7bsa", truncate.strings = FALSE)
-  
-  
+
 } 

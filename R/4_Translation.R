@@ -14,86 +14,35 @@ rmrp_translate <- function()
   
   ########################## Create and generate dictionnary ##################
   
-  # Get categorical values for translation from the reference tables
-  # Appealing orgs
+  # Translations obtained through already downloaded reference tables, missing values locally created
+  # Edit colnames for easier referencing
   
-  dfAO2 <- dfAO%>%
-    rename(type = AOIDORG,
-           English = Name,
-           Spanish = Nombre)%>%
-    mutate(type = "AO")
-    
-  # Implementing Partners
+  colnames(dfAO) <- c("AOIDORG",
+                      "NameAO", 
+                      "NombreAO")
   
-  dfIP2 <- dfIP%>%
-    rename(type = IPID,
-           English = Name,
-           Spanish = Nombre)%>%
-    mutate(type = "IP")
-    
-  # Sector and indicator
+  colnames(dfIP) <- c("IPID",
+                      "NameIP", 
+                      "NombreIP")
   
-  # Credentials located in seperate file
-  source("R/ai_credentials.R")
+  indicatortransl <- dfindicator %>%
+    left_join(dfindSP, by = c("Code" = "Codigo"))
   
-  # Get Spanish version and merge
-  dfindSP <- queryTable("cqt45yktk2m8ky3",
-                   "Código" = "cob8rivktedzp0f3",
-                   "Sector" = "c84rjfckxgbve582",
-                   "Indicador" = "cwkj9p4kteeh4ls5")%>%
-    left_join(dfindicator, by = c("Código" = "Code"))%>%
-    select(-Indicatortype, -sectindic)
   
-  dfsector <- dfindSP %>%
-    select(Sector, Subsector, Código)%>%
-    rename(type = Código,
-           English = Subsector,
-           Spanish = Sector)%>%
-    mutate(type = "Sector")%>%
-    group_by(Spanish, English, type)%>%
-    summarise()
-  
-  dfindicators <- dfindSP %>%
-    select(Indicador, Indicator, Código)%>%
-    rename(type = Código,
-           English = Indicator,
-           Spanish = Indicador)%>%
-    mutate(type = "Indicator")%>%
-    group_by(Spanish, English, type)%>%
-    summarise()
-    
   # Delivery mechanism
-  # BUild from scratch as there are no ref table in Activity info
   
   EnglishDelivery <- c("Physical cash ", "Mobile money transfer", "Bank transfer","Other electronic cash mechanisms", "Vouchers", "Others")
-  SpanishDelivery <- c("Efectivo", "Transferencia via móvil", "Transferencia Bancaria", "Otros mecanismos de dinero electrónico", "Cupones", "Otros")
+  SpanishDelivery <- c("Dinero en efectivo", "Transferencia via móvil", "Transferencia Bancaria", "Otros mecanismos de dinero electrónico", "Cupones", "Otros")
   
-  dfmechanism <- data.frame(EnglishDelivery, SpanishDelivery)%>%
-    rename(English = EnglishDelivery,
-           Spanish = SpanishDelivery)%>%
-    mutate(type = "mechanism")
-  
-    
-  # Yes/No questions
-    
-  English <- c("Yes", "Yes", "No")
-  Spanish <- c("Sí", "Si", "No")
-  type <- c("yesno", "yesno", "yesno")
-  
-  dfyesno <- data.frame(English, Spanish, type)
-  
-  # Get dictionnary together
-  
-  dictionnary <- rbind(dfAO2, dfIP2, dfsector, dfindicators, dfmechanism, dfyesno)%>%
-    summarise(Spanish, English, type)
-  
+  dfmechanism <- data.frame(EnglishDelivery, SpanishDelivery)
+
   ################################# Get data and translate #######################
   
   # Insert local file to get data in Spanish
   
   df5WSpanish <- read_excel("./data/RMRP2022ActivitiesSP.xlsx")
   
-  # Change column names to english templamte version
+  # Change column names to English template version
   
   colnames(df5WSpanish) <- c("Country",
                       "Admin1",
@@ -145,36 +94,104 @@ rmrp_translate <- function()
                 "Other_under",
                 "Other_above"), as.numeric)
   
+ # Create variable list of Yes/No columns for quicker translation
  
+  var_list_yes_no = c("Implementation", 
+                      "COVID19", 
+                      "RMRPActivity",
+                      "CVA")
   
-  # Translation function
-  translate_to_english <- function(df, col_esp, dict, group){
-    dict_group <- dict %>% 
-      filter(type == group)
-    
-    eng_term <-  dict_group[amatch(df %>% select(as.name(col_esp)) %>% pull(),
-                                   dict_group$Spanish,
-                                  maxDist=2),
-                           2] %>%
-      pull()
-    
-    return(eng_term)
-  }
+  # Translation made through different joins and mutate
   
-  df5Wtranslated <- df5WSpanish  %>%
-    mutate(`Appealing_org` = translate_to_english(df5WSpanish,"Appealing_org", dictionnary, 'AO'))
-           
-           
-      Implementing_partner = translate_to_english(df5WSpanish, "Implementing_partner", dictionnary, 'IP'),
-      Implementation = translate_to_english(df5WSpanish,"Implementation", dictionnary, "yesno"),
-      Subsector = translate_to_english(df5WSpanish, "Subsector", dictionnary, "Sector"),
-      Indicator = translate_to_english(df5WSpanish," Indicator", dictionnary, "Indicator"),
-      COVID19 = translate_to_english(df5WSpanish, "COVID19", dictionnary, "yesno"),
-      RMRPActivity = translate_to_english(df5WSpanish,"RMRPActivity", dictionnary, "yesno"),
-      CVA = translate_to_english(df5WSpanish, "CVA", dictionnary, "yesno"),
-      Delivery_mechanism = translate_to_english(df5WSpanish, "Delivery_mechanism", dictionnary, "mechanism")
-    ) 
+  df5Wtranslated <- df5WSpanish%>%
+    left_join(dfAO, by = c("Appealing_org" = "NombreAO"))%>%
+    left_join(dfIP, by = c("Implementing_partner" = "NombreIP"))%>%
+    left_join(indicatortransl, by = c( "Subsector" = "SectorSP", "Indicator" = "Indicador"))%>%
+    left_join(dfmechanism, by = c( "Delivery_mechanism" = "SpanishDelivery"))%>%
+    mutate(Appealing_org = NameAO,
+           Implementing_partner = NameIP,
+           Subsector = Subsector.y,
+           Indicator = Indicator.y,
+           Delivery_mechanism = EnglishDelivery)%>%
+    mutate_at(var_list_yes_no, 
+              function(x) gsub("Si","Yes",x)) %>%
+    mutate_at(var_list_yes_no, 
+              function(x) gsub("Sí","Yes",x)) %>% 
+    mutate_at(var_list_yes_no, 
+              function(x) gsub("No","No",x))%>%
+    select("Country",
+           "Admin1",
+           "Admin2",
+           "Appealing_org",
+           "Implementation",
+           "Implementing_partner",
+           "Month",
+           "Subsector",
+           "Indicator",
+           "Activity_Name",
+           "Activity_Description",
+           "COVID19",
+           "RMRPActivity",
+           "CVA",
+           "Value",
+           "Delivery_mechanism",
+           "Quantity_output",
+           "Total_monthly",
+           "New_beneficiaries",
+           "IN_DESTINATION",
+           "IN_TRANSIT",
+           "Host_Communities",
+           "PENDULARS",
+           "Returnees",
+           "Girls",
+           "Boys",
+           "Women",
+           "Men",
+           "Other_under",
+           "Other_above")
   
-  write_xlsx(df5Wtranslated, './out/Translated5W.xlsx')
+  # Change colnames to Activity Info original ones for easier upload
   
+  colnames(df5Wtranslated) <- c("Country" ,
+                                "Country Admin1" ,
+                                "Admin2",
+                                "Appealing organisation Name" ,
+                                "Implementation Set up",
+                                "Implementing partner Name" ,
+                                "Month" ,
+                                "Subsector" ,
+                                "Indicator" ,
+                                "Activity Name",
+                                "Activity Description" ,
+                                "COVID 19 Situation" ,
+                                "RMRP Activity" ,
+                                "CVA" ,
+                                "Value (in USD)" ,
+                                "Delivery mechanism" ,
+                                "Quantity of output" ,
+                                "Total monthly beneficiaries" ,
+                                "New beneficiaries of the month" ,
+                                "Refugees and Migrants IN DESTINATION" ,
+                                "Refugees and Migrants IN TRANSIT" ,
+                                "Host Communities Beneficiaries" ,
+                                "Refugees and Migrants PENDULARS",
+                                "Colombian Returnees" ,
+                                "Women under 18" ,
+                                "Men under 18" ,
+                                "Women above 18",
+                                "Men above 18" ,
+                                "Other under 18" ,
+                                "Other above 18")
+  
+  # Write file
+  
+   write_xlsx(df5Wtranslated, './out/Translated5W.xlsx')
+   
+   rm(indicatortransl,
+      EnglishDelivery,
+      SpanishDelivery,
+      dfmechanism,
+      var_list_yes_no
+   )
+   
   }

@@ -542,6 +542,27 @@ if(countryname %in% countrynoadmin1){
             
    # Print file
    write_xlsx(FinalConsolidated, './out/RMRP_2021_AI_consolidated.xlsx')
+   
+   rm(df5Wconsolidated,
+      monthlist,
+      dftemplate,
+      dfproportions,
+      monthlysectors,
+      monthlytotal,
+      monthly,
+      CVAmonthlysectors,
+      CVAmonthlytotal,
+      CVAmonthly,
+      finalmonthlyadm1,
+      finalmonthcountry,
+      finalmonthlytotal,
+      conssectors,
+      consCVAsectors,
+      consallsectors,
+      consolidated_report,
+      countrynoadmin1,
+      consfullmodel,
+      consfinal)
 }  
      
      
