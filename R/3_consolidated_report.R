@@ -17,13 +17,13 @@ library(writexl)
 # Filter by the needed country and PiN indicators only
 
 if (is.null(countryname) || (countryname=="All")) {
-  df5Wconsolidated <- df5W %>%
+  df5Wconsolidated <<- df5W %>%
     left_join(dfindicator, by = c("Subsector", "Indicator"))%>%
     select(-Code, -sectindic)%>%
     filter(Indicatortype == "PiN" & RMRPActivity == "Yes")%>%
     mutate_if(is.numeric, replace_na, replace = 0)
 } else {
-  df5Wconsolidated <- df5W %>% 
+  df5Wconsolidated <<- df5W %>% 
     filter(Country == countryname)%>%
     left_join(dfindicator, by = c("Subsector", "Indicator"))%>%
     select(-Code, -sectindic)%>%
@@ -43,7 +43,7 @@ if (is.null(countryname) || (countryname=="All")) {
   dftemplate <- dftemplate
 } else {
   dftemplate <- dftemplate%>%
-    filter(Country == "Costa Rica")%>%
+    filter(Country == countryname)%>%
     semi_join(monthlist, by = "Month")
 }
 

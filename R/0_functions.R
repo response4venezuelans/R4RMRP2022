@@ -29,9 +29,9 @@ r4v_error_report(countryname = NULL,
 # Sum: sum  all beneficiaries at admin1 level per sector and intersector
 
 source("R/3_consolidated_report.R")
-r4v_consolidated(data,countryname = "Costa Rica", 
+r4v_consolidated(data,countryname = "Panama", 
                  proportions = "pin", 
-                 totalmodel = "maxsector")
+                 totalmodel = "sum")
 
 
 # Translation: translate fro; spanish to English

@@ -2,7 +2,7 @@
 
 ### Function start
 
-r4v_error_report <- function(data,countryname = NULL, write = NULL)
+r4v_error_report <- function(data,countryname = NULL, write = "yes")
 { 
 
 ### Get packages
