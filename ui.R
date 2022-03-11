@@ -1,3 +1,6 @@
+#### RMRP 2022 Shiny app #####
+
+#### Page 1. Load Data in English #####
 dashboardPage(
   dashboardHeader(disable = TRUE),
   dashboardSidebar(disable = TRUE),
@@ -5,7 +8,7 @@ dashboardPage(
   dashboardBody(
     img(src = "r4v.png", height = 80),
     tabsetPanel(
-      tabPanel(title = "1.Data Upload",br(),
+      tabPanel(title = "1.Data Upload in English",br(),
                p("V1 Released on XX/03/2022, please send any comments to the Regional platform IM team", style="color: #fff; background-color: #672D53"),
                
                  
@@ -20,12 +23,6 @@ dashboardPage(
                                                 
                                                 ),
 
-                                              fluidRow(
-                                                column(width = 5,
-                                                       br(),
-                                                       br(),
-                                                       fileInput(inputId = "data_upload",label = "or Browse and Upload (xlsx Regional format)",multiple = F),
-                                                ),
                                                 column(width = 5,
                                                        br(),
                                                        p("or Load all the data from Activity Info (API) regional database (2min)"),
@@ -43,6 +40,13 @@ dashboardPage(
                tags$b("Imported data:"),
                verbatimTextOutput(outputId = "status"),
                verbatimTextOutput(outputId = "data")
-               ))))))) 
-     
+               )))))) 
+
+##### Page 2. Data Quality Check ############
+
+
+##### Page 3. Consolidated report ############
+
+
+##### Page 4. Upload Spanish data ############
 

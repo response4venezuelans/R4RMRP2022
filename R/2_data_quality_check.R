@@ -14,6 +14,39 @@ library(writexl)
 
 ### This script must be executed only after doing the read data script
 
+### Double check colnames
+  
+  colnames(df5W) <- c("Country",
+                      "Admin1",
+                      "Admin2",
+                      "Appealing_org",
+                      "Implementation",
+                      "Implementing_partner",
+                      "Month",
+                      "Subsector",
+                      "Indicator",
+                      "Activity_Name",
+                      "Activity_Description",
+                      "COVID19",
+                      "RMRPActivity",
+                      "CVA",
+                      "Value",
+                      "Delivery_mechanism",
+                      "Quantity_output",
+                      "Total_monthly",
+                      "New_beneficiaries",
+                      "IN_DESTINATION",
+                      "IN_TRANSIT",
+                      "Host_Communities",
+                      "PENDULARS",
+                      "Returnees",
+                      "Girls",
+                      "Boys",
+                      "Women",
+                      "Men",
+                      "Other_under",
+                      "Other_above")
+
 ### Filter the country if needed
 
 if (is.null(countryname) || (countryname=="All")) {

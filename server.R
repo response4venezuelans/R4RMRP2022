@@ -17,9 +17,9 @@ shinyServer(function(input, output, session) {
     imported$status() })
   
     output$data <- renderPrint({
-      source("R/1_read_data.R")
+      source("R/1_1_read_data_local.R")
         
-    Data(r4v_pull_xlsdata(imported$data()))
+    Data(read_data_2022_local(imported$data()))
       showNotification("Data Processing Complete",duration = 10, type = "error")
       
     updateSelectInput(session,"country_name",choices = unique(Data()$Country))
@@ -41,9 +41,9 @@ shinyServer(function(input, output, session) {
       req(F)
     }
     # Skip=2 get rid of the 2 toplines as per the template
-    Data(read_excel(input$data_upload$datapath, skip = 2))
-    source("R/1b_read_data_rmrp.R")
-    Data(r4v_pull_xlsdata(Data()))
+    Data(read_excel(input$data_upload$datapath))
+    source("R/1_1_read_data_local.R")
+    Data(read_data_2022_local(Data()))
     showNotification("Data Processing Complete",duration = 10, type = "error")
     
     # Update the drop down button with Countries
@@ -68,7 +68,7 @@ shinyServer(function(input, output, session) {
   
   observeEvent(input$Run_Script,{
     source("R/1_read_data.R")
-    Data(r4v_pull_aidata())
+    Data(read_data_2022())
     showNotification("Data Processing Complete",duration = 10, type = "error")
     updateSelectInput(session,"country_name",choices = c("All",unique(Data()$Country)))
     updateSelectInput(session,"country_name_agg",choices = c("All",unique(Data()$Country)))

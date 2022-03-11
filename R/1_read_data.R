@@ -2,8 +2,7 @@
 # function
 
 read_data_2022 <- function(data, 
-                           source = "activityinfo",
-                           write ="no")
+                           write ="yes")
 { 
 
 # Load packages
@@ -17,7 +16,6 @@ source("R/ai_credentials.R")
 
 # Get data from different sources
 
-  if(source == "activityinfo"){
     df5W <- queryTable("cw1o8nbkx69lc9l3",
                      "Country" = "cezj1rqkxeqrsy57.c8u26b8kxeqpy0k4",
                      "Country Admin1" = "cezj1rqkxeqrsy57.c3ns3zikxeqq4h95",
@@ -49,12 +47,7 @@ source("R/ai_credentials.R")
                      "Men above 18" = "ctd27ackx6l7g814v",
                      "Other under 18" = "ckjcuiokx6l9a504w",
                      "Other above 18" = "cq4hs3skx6lggpj4x", truncate.strings = FALSE)
-  } else {
-    df5W <- read_excel("data/RMRP2022Activities.xlsx")%>%
-      # As template has extra row at the beginning, removes those extra rows
-      slice(-c(1,2))
-  }
-  
+
  # format column names for easier data processing
   
   colnames(df5W) <- c("Country",
@@ -155,5 +148,6 @@ source("R/ai_credentials.R")
                    "IPID" = "cd2ow0jkumwazdl1h",
                    "Name" = "ckj5zamkumvyysv9",
                    "Nombre" = "cpmcp88kumvz7bsa", truncate.strings = FALSE)
-
+ return(df5W)
+  
 } 

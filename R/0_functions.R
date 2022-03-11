@@ -11,15 +11,14 @@
 # default: "no"
 
 source("R/1_read_data.R")
-read_data_2022(source = "activityinfo",
-               write = "yes")
+read_data_2022(write = "yes")
 
 
 # Data Quality Check
 # Option: filter your country
 # write the report in a local repository
 source("R/2_data_quality_check.R")
-r4v_error_report(countryname = NULL,
+r4v_error_report(countryname = "Panama",
                write = "yes")
 
 
