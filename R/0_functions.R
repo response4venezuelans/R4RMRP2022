@@ -13,12 +13,11 @@
 source("R/1_read_data.R")
 read_data_2022(write = "yes")
 
-
 # Data Quality Check
 # Option: filter your country
 # write the report in a local repository
 source("R/2_data_quality_check.R")
-r4v_error_report(countryname = "Panama",
+r4v_error_report(countryname = NULL,
                write = "yes")
 
 
@@ -28,7 +27,7 @@ r4v_error_report(countryname = "Panama",
 # Sum: sum  all beneficiaries at admin1 level per sector and intersector
 
 source("R/3_consolidated_report.R")
-r4v_consolidated(data,countryname = "Panama", 
+r4v_consolidated(data,countryname = NULL, 
                  proportions = "pin", 
                  totalmodel = "sum")
 
