@@ -2,11 +2,16 @@
 
 ### Function start
 
-r4v_error_report <- function(data,countryname = NULL, write = "yes")
+r4v_error_report <- function(data,countryname = NULL, 
+                             write = "yes")
 { 
 
 ### Get packages
 
+  # SHINY Creating a list which will return all the dataframes
+  return_data <- list()
+  
+  
 library(tidyverse)
 library(readxl)
 library(dplyr)
@@ -203,8 +208,12 @@ if (is.null(countryname) || (countryname=="All")) {
     
   }
   
+ # SHINY
+ return_data$ErrorReportclean <- df5Werror0
+ 
   ## remove objects end of script##
-  rm(AOlist, IPlist, countrylist, admin2list, df5Werror, sectindiclist,df5Werror0 ,df5Werror1 ,df5Werror2)
-  
+  rm(AOlist, IPlist, countrylist, admin2list, df5Werror, sectindiclist,df5Werror1 ,df5Werror2)
+
+
 } 
 

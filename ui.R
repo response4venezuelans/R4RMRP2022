@@ -40,9 +40,33 @@ dashboardPage(
                tags$b("Imported data:"),
                verbatimTextOutput(outputId = "status"),
                verbatimTextOutput(outputId = "data")
-               )))))) 
+               ))),
+##### Page2. Data Quality Check ############
+    tabPanel(title = "2.Error and cleaning script",br(),
+             p("Data Quality Check for English version, V1 Updated XX/03/2022, please send any comments to the Regional platform IM team", style="color: #fff; background-color: #672D53"),
+             
+             fluidRow(
+               
+               column(3,shinydashboard::box(id="box_2", title = "Error Report and cleaning scripts", solidHeader = T,collapsible = T,collapsed = F,
+                                            width = 12,status = "primary",
+                                            p("Please select your country and the automatic cleaning script you want to apply and RUN SCRIPT"),
+                                            fluidRow(
+                                              column(1,selectInput("country_name",label = "Country Name",choices = c("NULL")))),
+                                            actionButton("run_err_report",label = "Run Script",icon = icon("black-tie"), style="color: #fff; background-color: #00AAAD"), 
+                                            downloadButton("downloadprecleaned", "Download Error report", style="color: #fff; background-color: #672D53"),
+                                            )),
+               column(3,shinydashboard::box(id="box_3", title = "Summary", solidHeader = T,collapsible = T,collapsed = F,
+                                            width = 12,status = "warning",
+                                            p("Number or Activities"),
+                                            h2(textOutput("Number_of_Activities")),
+                                            p("Number of errors Pre cleaning"),
+                                            h2(textOutput("Number_of_Errors_Pre")),
+                                            p("Percentage of errors"),
+                                            h2(textOutput("Percentage_of_Errors")),
+               ))))
 
-##### Page 2. Data Quality Check ############
+
+    )))
 
 
 ##### Page 3. Consolidated report ############

@@ -32,6 +32,6 @@ r4v_consolidated(data,countryname = NULL,
                  totalmodel = "sum")
 
 
-# Translation: translate fro; spanish to English
+# Translation: translate from spanish to English
 source("R/4_Translation.R")
 rmrp_translate()

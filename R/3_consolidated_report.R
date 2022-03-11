@@ -50,11 +50,9 @@ if (is.null(countryname) || (countryname=="All")) {
 # Get prpoportions file for each sector in Admin1 and poptype categories
 
 if (proportions == "pin")  {
-  dfproportions <- read_excel("./data/Proportions.xlsx", sheet = "pinproportions")%>%
-    filter(Country == countryname)
+  dfproportions <- read_excel("./data/Proportions.xlsx", sheet = "pinproportions")
 } else if (proportions == "target") {
-  dfproportions <- read_excel("data/Proportions.xlsx", sheet = "targetproportions")%>%
-    filter(Country == countryname)
+  dfproportions <- read_excel("data/Proportions.xlsx", sheet = "targetproportions")
 }
 
 
@@ -466,14 +464,16 @@ if (totalmodel == "maxsector")
 
 countrynoadmin1 <- as.vector(c("Aruba", "Costa Rica", "Curaçao", "Dominican Republic", "Guyana", "Mexico", "Panama", "Trinidad and Tobago"))
 
-if(countryname %in% countrynoadmin1){
-  
-  
-  consfullmodel <- consfullmodel%>%
-    filter(Admin1 == "Country level")
-  
-  
-}
+# if(countryname %in% countrynoadmin1){
+#   
+#   
+#   consfullmodel <- consfullmodel%>%
+#     filter(Admin1 == "Country level")
+#   
+#   
+# }  else {
+#   consfullmodel <- consfullmodel
+# }
 
   # Merge with template
    consolidated_report <- dftemplate %>%

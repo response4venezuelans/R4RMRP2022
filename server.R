@@ -9,6 +9,7 @@ shinyServer(function(input, output, session) {
   Consolidated <- reactiveVal()
   Error_Download <- reactiveVal()
 
+##### 1. Load Data ######
   
   imported <- import_copypaste_server("myid")
   
@@ -72,6 +73,47 @@ shinyServer(function(input, output, session) {
     showNotification("Data Processing Complete",duration = 10, type = "error")
     updateSelectInput(session,"country_name",choices = c("All",unique(Data()$Country)))
     updateSelectInput(session,"country_name_agg",choices = c("All",unique(Data()$Country)))
+  })
+ 
+##### 2. Data Quality Check ###### 
+  
+  observeEvent(input$run_err_report,{
+    source("R/2_data_quality_check.R")
+    Error_report <- r4v_error_report(data = Data(),
+                                     countryname = input$country_name,
+                                     write = "yes")
+    
+    
+    Error_Download(Error_report$ErrorReportclean)
+    
+    # To output number of activities and error 
+    
+    output$Number_of_Activities <- renderText({nrow(Error_report$ErrorReportclean)})
+    output$Number_of_Errors_Pre <- renderText({sum(!is.na(Error_report$ErrorReportclean$Review))})
+    output$Percentage_of_Errors <- renderText(round({sum(!is.na(Error_report$ErrorReportclean$Review))}/{nrow(Error_report$ErrorReportclean)}*100, digits = 1))
+    
+    # PLOTLY section
+    
+    output$plot <- renderPlotly({
+      Error_report$ErrorReportclean %>%
+        filter(!is.na(Review)) %>%
+        ggplot() +
+        aes(x = Appealing_org, size = Review) +
+        geom_bar(fill = "#0c4c8a") +
+        coord_flip() +
+        theme_minimal()})
+    
+    output$plot2 <- renderPlotly({
+      Error_report$ErrorReportclean %>%
+        filter(!is.na(Review)) %>%
+        ggplot() +
+        aes(x = Country, size = Review) +
+        geom_bar(fill = "#0c4c8a") +
+        coord_flip() +
+        theme_minimal()})
+    
+    
+    showNotification("Successful",duration = 10, type = "error")
   })
   
  })
