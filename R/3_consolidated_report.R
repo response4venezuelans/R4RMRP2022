@@ -465,7 +465,15 @@ if (totalmodel == "maxsector")
 
 # For countries with no admin1, filter out to only keep the "Country level" data
 
+countrynoadmin1 <- c("Aruba", "Curaçao", "Costa Rica", "Dominican Republic", "Trinidad and Tobago", "Guyana", 
+                     "Mexico", "Panama")
 
+if(countryname %in% countrynoadmin1){
+  consfullmodel <- consfullmodel%>%
+    filter(Admin1 == "Country level")
+} else {
+  consfullmodel <- consfullmodel
+ }
 
   # Merge with template
    consolidated_report <- dftemplate %>%
@@ -491,7 +499,7 @@ if (totalmodel == "maxsector")
             'Consolidated Other above 18' = cumsum(Consolidated_Other_above_18),
             'Consolidated CVA Beneficiaries' = cumsum(Consolidated_CVA_Beneficiaries))%>%
      rowwise()%>%
-     # Add 2 columns to check if the breakdowns are correct. 
+     # Add 3 columns to check if the breakdowns are correct. 
      mutate('Check PopType Breakdown' = ifelse(`Consolidated Total` == 0 | (`Consolidated Total` > 0 & 
                                                                               `Consolidated Total` == sum(`Consolidated In Destination`,
                                                                                                           `Consolidated In Transit`,
