@@ -29,31 +29,7 @@ shinyServer(function(input, output, session) {
     
     })
     
- 
-  ## Observe file Input
-  observeEvent(
-    
-    input$data_upload,{
-    filename <- tolower(input$data_upload$name)
-    
-    ## Condition to check file type
-    if(!(sub('.*\\.','',filename)) %in% 'xlsx'){
-      showNotification('Only XLSX are supported',duration = 5)
-      req(F)
-    }
-    # Skip=2 get rid of the 2 toplines as per the template
-    Data(read_excel(input$data_upload$datapath))
-    source("R/1_1_read_data_local.R")
-    Data(read_data_2022_local(Data()))
-    showNotification("Data Processing Complete",duration = 10, type = "error")
-    
-    # Update the drop down button with Countries
-    
-    updateSelectInput(session,"country_name",choices = unique(Data()$Country))
-    updateSelectInput(session,"country_name_agg",choices = unique(Data()$Country))
-  })
-  
-  ## Data Preview
+   ## Data Preview
   output$Preview_Data <- DT::renderDataTable({Data()},extensions = c("Buttons"), options = list(
     dom = 'lfrtip', 
     # add B for button
@@ -64,7 +40,6 @@ shinyServer(function(input, output, session) {
     scrollX = TRUE,
     autowidth = TRUE,
     rownames = TRUE
-    # buttons = c('copy', 'csv', 'excel', 'pdf')
   ))
   
   observeEvent(input$Run_Script,{
@@ -111,9 +86,46 @@ shinyServer(function(input, output, session) {
         geom_bar(fill = "#0c4c8a") +
         coord_flip() +
         theme_minimal()})
-    
-    
+
     showNotification("Successful",duration = 10, type = "error")
   })
   
+  ## Download Error report
+  output$downloadprecleaned <- downloadHandler(
+    filename = function() {
+      paste("Error Report", ".xlsx", sep = "")
+    },
+    content = function(file) {
+      write_xlsx(Error_Download(), file)
+    }
+  )
+  
+  output$Preview_Error_Report <- DT::renderDataTable({Error_Download()},extensions = c("Buttons"), options = list(
+    dom = 'lfrtip',
+    paging = TRUE,
+    ordering = TRUE,
+    lengthChange = TRUE,
+    pageLength = 10,
+    scrollX = TRUE,
+    autowidth = TRUE,
+    rownames = TRUE))
+  
+  ##### 3. Consolidated report ######
+  
+  observeEvent(input$run_aggregation,{
+    source("R/3_consolidated_report.R")
+    Consolidated(r4v_consolidated(data = Data(),countryname = input$country_name_agg,totalmodel = input$totalmodel_agg))
+    showNotification("Successful",duration = 10, type = "error")
+    
+    ## Download Consolidated
+    output$downloadData <- downloadHandler(
+      filename = function() {
+        paste("Consolidated_Report", ".xlsx", sep = "")
+      },
+      content = function(file) {
+        write_xlsx(Consolidated(), file)
+      }
+    )
+    
+  })
  })

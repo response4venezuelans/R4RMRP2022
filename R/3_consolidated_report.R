@@ -291,7 +291,7 @@ if (totalmodel == "maxsector")
    consfinal <- rbind(consmaxfinaladmin1, consmaxfinalcountry)  
 }
    
-   if (totalmodel == "sountherconemodel")
+   if (totalmodel == "southernconemodel")
      {
      # Model 3: Mixed approach in 3 steps:
      # Max across Shelter, Food security, Humanitarian transport and WASH
@@ -543,8 +543,7 @@ countrynoadmin1 <- as.vector(c("Aruba", "Costa Rica", "Curaçao", "Dominican Rep
    # Print file
    write_xlsx(FinalConsolidated, './out/RMRP_2021_AI_consolidated.xlsx')
    
-   rm(df5Wconsolidated,
-      monthlist,
+   rm(monthlist,
       dftemplate,
       dfproportions,
       monthlysectors,
@@ -563,6 +562,10 @@ countrynoadmin1 <- as.vector(c("Aruba", "Costa Rica", "Curaçao", "Dominican Rep
       countrynoadmin1,
       consfullmodel,
       consfinal)
+   
+   ## SHINY
+   return(FinalConsolidated)
+   
 }  
      
      

@@ -209,7 +209,9 @@ if (is.null(countryname) || (countryname=="All")) {
   }
   
  # SHINY
+ 
  return_data$ErrorReportclean <- df5Werror0
+ return(return_data)
  
   ## remove objects end of script##
   rm(AOlist, IPlist, countrylist, admin2list, df5Werror, sectindiclist,df5Werror1 ,df5Werror2)
