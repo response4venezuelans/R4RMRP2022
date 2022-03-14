@@ -114,8 +114,22 @@ shinyServer(function(input, output, session) {
   
   observeEvent(input$run_aggregation,{
     source("R/3_consolidated_report.R")
-    Consolidated(r4v_consolidated(data = Data(),countryname = input$country_name_agg,totalmodel = input$totalmodel_agg))
+    Consolidated<-(r4v_consolidated(data = Data(),countryname = input$country_name_agg,totalmodel = input$totalmodel_agg))
     showNotification("Successful",duration = 10, type = "error")
+    
+    Consolidated(Consolidated$ConsolidatedReport)
+    
+    ## Preview consolidated
+    
+    output$Preview_conslidated <- DT::renderDataTable({Consolidated()},extensions = c("Buttons"), options = list(
+      dom = 'lfrtip',
+      paging = TRUE,
+      ordering = TRUE,
+      lengthChange = TRUE,
+      pageLength = 10,
+      scrollX = TRUE,
+      autowidth = TRUE,
+      rownames = TRUE))
     
     ## Download Consolidated
     output$downloadData <- downloadHandler(

@@ -14,6 +14,9 @@ library(readxl)
 library(dplyr)
 library(writexl)
 
+  # SHINY Creating a list which will return all the dataframes
+  return_data <- list()
+  
 # Filter by the needed country and PiN indicators only
 
 if (is.null(countryname) || (countryname=="All")) {
@@ -462,18 +465,7 @@ if (totalmodel == "maxsector")
 
 # For countries with no admin1, filter out to only keep the "Country level" data
 
-countrynoadmin1 <- as.vector(c("Aruba", "Costa Rica", "Curaçao", "Dominican Republic", "Guyana", "Mexico", "Panama", "Trinidad and Tobago"))
 
-# if(countryname %in% countrynoadmin1){
-#   
-#   
-#   consfullmodel <- consfullmodel%>%
-#     filter(Admin1 == "Country level")
-#   
-#   
-# }  else {
-#   consfullmodel <- consfullmodel
-# }
 
   # Merge with template
    consolidated_report <- dftemplate %>%
@@ -518,7 +510,8 @@ countrynoadmin1 <- as.vector(c("Aruba", "Costa Rica", "Curaçao", "Dominican Rep
             'Check CVA higher Total' = ifelse(`Consolidated CVA Beneficiaries` > `Consolidated Total`, "CVA Value higher than total", "ok"))%>%
      ungroup()%>%
      select(Platform,
-            Country, 
+            Country,
+            Admin1,
             Month,
             Subsector,
             `Monthly Total Beneficiaries`,
@@ -564,7 +557,9 @@ countrynoadmin1 <- as.vector(c("Aruba", "Costa Rica", "Curaçao", "Dominican Rep
       consfinal)
    
    ## SHINY
-   return(FinalConsolidated)
+   return_data$ConsolidatedReport <- FinalConsolidated
+   return(return_data)
+ 
    
 }  
      
