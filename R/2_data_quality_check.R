@@ -104,7 +104,7 @@ if (is.null(countryname) || (countryname=="All")) {
     MultipurposeSector = ifelse(Subsector == "Multipurpose Cash Assistance (MPC)" & CVA == "No", "Review", ""),
     # Output and Breakdown related mistakes. Reviews will be divided according to indicator types
     # PNiN indicator related mistakes
-    PiNNoBenef = ifelse(Indicatortype == 'PiN' & (is.na(New_beneficiaries) | New_beneficiaries == 0 | is.na(Total_monthly) | Total_monthly == 0), "Review", ""),
+    PiNNoBenef = ifelse(Indicatortype == 'PiN' & ((is.na(New_beneficiaries) | New_beneficiaries == 0) & (is.na(Total_monthly) | Total_monthly == 0)), "Review", ""),
     NewBenefvstotal = ifelse(Indicatortype == 'PiN' & New_beneficiaries > Total_monthly, "Review", ""),
     PopTypeBreakdown = ifelse(Indicatortype == 'PiN' & New_beneficiaries != sum(IN_DESTINATION,
                                                                                  IN_TRANSIT,
