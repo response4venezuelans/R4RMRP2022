@@ -40,7 +40,7 @@ rmrp_translate <- function()
   
   # Insert local file to get data in Spanish
   
-  df5WSpanish <- read_excel("./data/RMRP2022ActivitiesSP.xlsx")
+  df5WSpanish <- df5WSP
   
   # Change column names to English template version
   
