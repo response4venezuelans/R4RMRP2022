@@ -8,8 +8,8 @@ shinyServer(function(input, output, session) {
   Data <- reactiveVal()
   Consolidated <- reactiveVal()
   Error_Download <- reactiveVal()
-
-##### 1. Load Data ######
+  
+  ##### 1. Load Data ######
   
   imported <- import_copypaste_server("myid")
   
@@ -17,19 +17,19 @@ shinyServer(function(input, output, session) {
   output$status <- renderPrint({
     imported$status() })
   
-    output$data <- renderPrint({
-      source("R/1_1_read_data_local.R")
-        
+  output$data <- renderPrint({
+    source("R/1_1_read_data_local.R")
+    
     Data(read_data_2022_local(imported$data()))
-      showNotification("Data Processing Complete",duration = 10, type = "error")
-      
+    showNotification("Data Processing Complete",duration = 10, type = "error")
+    
     updateSelectInput(session,"country_name",choices = unique(Data()$Country))
     updateSelectInput(session,"country_name_agg",choices = unique(Data()$Country))
     
     
-    })
-    
-   ## Data Preview
+  })
+  
+  ## Data Preview
   output$Preview_Data <- DT::renderDataTable({Data()},extensions = c("Buttons"), options = list(
     dom = 'lfrtip', 
     # add B for button
@@ -49,8 +49,8 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session,"country_name",choices = c("All",unique(Data()$Country)))
     updateSelectInput(session,"country_name_agg",choices = c("All",unique(Data()$Country)))
   })
- 
-##### 2. Data Quality Check ###### 
+  
+  ##### 2. Data Quality Check ###### 
   
   observeEvent(input$run_err_report,{
     source("R/2_data_quality_check.R")
@@ -86,7 +86,7 @@ shinyServer(function(input, output, session) {
         geom_bar(fill = "#0c4c8a") +
         coord_flip() +
         theme_minimal()})
-
+    
     showNotification("Successful",duration = 10, type = "error")
   })
   
@@ -142,4 +142,4 @@ shinyServer(function(input, output, session) {
     )
     
   })
- })
+})
