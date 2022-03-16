@@ -13,7 +13,6 @@ shinyServer(function(input, output, session) {
   
   imported <- import_copypaste_server("myid")
   
-  
   output$status <- renderPrint({
     imported$status() })
   
