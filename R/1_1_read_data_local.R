@@ -1,22 +1,14 @@
 # Read data 2022
 # function
 
-read_data_2022_local <- function(data, 
-                           write ="yes")
+read_data_2022_local <- function(data)
 { 
-  
-  # Load packages
-  library(activityinfo)
-  library(tidyverse)
-  library(readxl)
-  library(writexl)
-  
   # Credentials located in seperate file
   source("R/ai_credentials.R")
   
-  # Get data from different sources
+  # Get data 
   
-  df5W <- data
+  df5W <- data 
   
   # format column names for easier data processing
   
@@ -71,11 +63,9 @@ read_data_2022_local <- function(data,
                 "Other_above"), as.numeric)%>%
     arrange(Country, Month)
   
-  # Not recommended but if needed, chose to write the 5W as a xlsx file in repository
-  
-  if(write == "yes"){
+  # Write the 5W as a xlsx file in repository
     write_xlsx(df5W, "./data/Activities_5W_2022.xlsx")
-  } 
+    
   # Get other reference table used during the data quality check
   # Loaded from AI regardless the method for 5W used
   

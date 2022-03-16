@@ -5,12 +5,6 @@ read_data_2022 <- function(data,
                            write ="yes")
 { 
 
-# Load packages
-library(activityinfo)
-library(tidyverse)
-library(readxl)
-library(writexl)
-  
 # Credentials located in seperate file
 source("R/ai_credentials.R")
 
