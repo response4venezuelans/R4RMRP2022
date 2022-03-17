@@ -42,9 +42,9 @@ read_data_2022_local <- function(data)
                       "Men",
                       "Other_under",
                       "Other_above")
-  
+
   # Short data wrangling for integer values
-  
+
   df5W <<- df5W %>%
     mutate_at(c("Value",
                 "Quantity_output",
@@ -62,7 +62,7 @@ read_data_2022_local <- function(data)
                 "Other_under",
                 "Other_above"), as.numeric)%>%
     arrange(Country, Month)
-  
+
   # Write the 5W as a xlsx file in repository
     write_xlsx(df5W, "./data/Activities_5W_2022.xlsx")
     
