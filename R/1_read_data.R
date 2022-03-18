@@ -127,12 +127,7 @@ source("R/ai_credentials.R")
     rowwise()%>%
     mutate(sectindic = paste(Subsector, Indicator))%>%
     ungroup
-  
-  dfindSP <<- queryTable("cqt45yktk2m8ky3",
-                        "Codigo" = "cob8rivktedzp0f3",
-                        "SectorSP" = "c84rjfckxgbve582",
-                        "Indicador" = "cwkj9p4kteeh4ls5", truncate.strings = FALSE)  
-  
+
   dfAO  <<- queryTable("cbisyyxkumvyhy57",
                    "AOIDORG" = "cnhvpo4kumvyqla8",
                    "Name" = "ckj5zamkumvyysv9",
