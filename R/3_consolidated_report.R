@@ -27,7 +27,7 @@ if (is.null(countryname) || (countryname=="All")) {
     mutate_if(is.numeric, replace_na, replace = 0)
 } else {
   df5Wconsolidated <<- df5W %>% 
-    filter(Country == "Argentina")%>%
+    filter(Country == countryname)%>%
     left_join(dfindicator, by = c("Subsector", "Indicator"))%>%
     select(-Code, -sectindic)%>%
     filter(Indicatortype == "PiN" & RMRPActivity == "Yes")%>%
@@ -46,7 +46,7 @@ if (is.null(countryname) || (countryname=="All")) {
   dftemplate <- dftemplate
 } else {
   dftemplate <- dftemplate%>%
-    filter(Country == "Argentina")%>%
+    filter(Country == countryname)%>%
     semi_join(monthlist, by = "Month")
 }
 
@@ -434,9 +434,11 @@ if (totalmodel == "maxsector")
                Consolidated_Other_under_18 = sum(Consolidated_Other_under_18),
                Consolidated_Other_above_18 = sum(Consolidated_Other_above_18),
                Consolidated_CVA_Beneficiaries = sum(Consolidated_CVA_Beneficiaries))
+
+   consCSAdminFull <- rbind(consCSadmin1, consallsectors)
    
   # Get country level figures
-   consCScountry <- consCSadmin1 %>%
+   consCScountry <- consCSAdminFull %>%
      group_by(Country, Month, Subsector)%>%
      summarise(Admin1 = "Country level",
                Monthly_Consolidated = sum(Monthly_Consolidated),
@@ -453,7 +455,7 @@ if (totalmodel == "maxsector")
                Consolidated_Other_above_18 = sum(Consolidated_Other_above_18),
                Consolidated_CVA_Beneficiaries = sum(Consolidated_CVA_Beneficiaries))
    # Merge admin1 and country level figures final file
-   consfinal <- rbind(consCSadmin1, consCScountry, consallsectors)
+   consfinal <- rbind(consCSAdminFull, consCScountry)
 }
 
 ##### Back to common consolidation process #############
@@ -542,7 +544,7 @@ if(countryname %in% countrynoadmin1){
             `Check CVA higher Total`)
             
    # Print file
-   write_xlsx(FinalConsolidated, './out/RMRP_2021_AI_consolidated.xlsx')
+   write_xlsx(FinalConsolidated, './out/RMRP_2022_AI_consolidated.xlsx')
    
    rm(monthlist,
       dftemplate,
