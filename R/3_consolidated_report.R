@@ -27,7 +27,7 @@ if (is.null(countryname) || (countryname=="All")) {
     mutate_if(is.numeric, replace_na, replace = 0)
 } else {
   df5Wconsolidated <<- df5W %>% 
-    filter(Country == countryname)%>%
+    filter(Country == "Argentina")%>%
     left_join(dfindicator, by = c("Subsector", "Indicator"))%>%
     select(-Code, -sectindic)%>%
     filter(Indicatortype == "PiN" & RMRPActivity == "Yes")%>%
@@ -46,7 +46,7 @@ if (is.null(countryname) || (countryname=="All")) {
   dftemplate <- dftemplate
 } else {
   dftemplate <- dftemplate%>%
-    filter(Country == countryname)%>%
+    filter(Country == "Argentina")%>%
     semi_join(monthlist, by = "Month")
 }
 
@@ -453,7 +453,7 @@ if (totalmodel == "maxsector")
                Consolidated_Other_above_18 = sum(Consolidated_Other_above_18),
                Consolidated_CVA_Beneficiaries = sum(Consolidated_CVA_Beneficiaries))
    # Merge admin1 and country level figures final file
-   consfinal <- rbind(consCSadmin1, consCScountry)
+   consfinal <- rbind(consCSadmin1, consCScountry, consallsectors)
 }
 
 ##### Back to common consolidation process #############
