@@ -43,7 +43,8 @@ dftemplate <- read_excel("data/Consolidated_Template.xlsx")
 
 
 if (is.null(countryname) || (countryname=="All")) {
-  dftemplate <- dftemplate
+  dftemplate <- dftemplate%>%
+    semi_join(monthlist, by = "Month")
 } else {
   dftemplate <- dftemplate%>%
     filter(Country == countryname)%>%
