@@ -23,14 +23,14 @@ if (is.null(countryname) || (countryname=="All")) {
   df5Wconsolidated <<- df5W %>%
     left_join(dfindicator, by = c("Subsector", "Indicator"))%>%
     select(-Code, -sectindic)%>%
-    filter(Indicatortype == "PiN" & RMRPActivity == "Yes")%>%
+    filter(Indicatortype == "PiN" )%>%
     mutate_if(is.numeric, replace_na, replace = 0)
 } else {
   df5Wconsolidated <<- df5W %>% 
     filter(Country == countryname)%>%
     left_join(dfindicator, by = c("Subsector", "Indicator"))%>%
     select(-Code, -sectindic)%>%
-    filter(Indicatortype == "PiN" & RMRPActivity == "Yes")%>%
+    filter(Indicatortype == "PiN")%>%
   mutate_if(is.numeric, replace_na, replace = 0)  
 }
  
