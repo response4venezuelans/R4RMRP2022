@@ -403,7 +403,7 @@ if (totalmodel == "maxsector")
    
    # Step 3: sum data for all the other sector: Integration, Multipurporse CBI, Health, Education
    consCSstep3 <- consallsectors%>%
-     filter(Subsector %in% c("Multipurpose Cash Assistance (MPC)", "Humanitarian Transportation", "WASH", "Food Security"))%>%
+     filter(Subsector %in% c("Multipurpose Cash Assistance (MPC)", "Integration", "Health", "Education"))%>%
      summarise(Subsector = "Intersector",
                Monthly_Consolidated = sum(Monthly_Consolidated),
                Consolidated_RMindestination = sum( Consolidated_RMindestination), 
